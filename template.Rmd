@@ -10,4 +10,10 @@ This file is for doing data import.
 ```{r}
 library(tidyverse)
 ```
+Import our first dataset. 
+
+```{r}
+litters_df = 
+  read_csv(file = "data/data/FAS_litters.csv") #always use relative path
+```
 
