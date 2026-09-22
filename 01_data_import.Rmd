@@ -12,17 +12,24 @@ This file is for doing data import.
 library(tidyverse)
 ```
 Import our first dataset. 
-
+"na = c("", "NA", ".")" changes the missing data which is originally character viarable to numbers. 
 ```{r}
 litters_df = 
-  read_csv(file = "data/data/FAS_litters.csv") #always use relative path
+  read_csv(
+    file = "data/data/FAS_litters.csv",
+    na = c("", "NA", ".")
+  ) #always use relative path
 
 litters_df = janitor::clean_names(litters_df)
 ```
 Import the second dataset
 ```{r}
 pups_df = 
-  read_csv("data/data/FAS_pups.csv", skip = 3)
+  read_csv(
+    "data/data/FAS_pups.csv", 
+    skip = 3, 
+    na = c("", "NA", ".")
+  )
 
 pups_df = janitor::clean_names(pups_df) #"janitor" is a package, "clean_names()" is a function in the package. "::" means only open this function rather than all the things in the package.  
 ```
