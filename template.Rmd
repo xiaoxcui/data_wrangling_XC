@@ -5,6 +5,7 @@ output: github_document
 
 I'm an R Markdown document! 
 
+## Import datasets
 This file is for doing data import.
 
 ```{r}
@@ -15,5 +16,29 @@ Import our first dataset.
 ```{r}
 litters_df = 
   read_csv(file = "data/data/FAS_litters.csv") #always use relative path
+
+litters_df = janitor::clean_names(litters_df)
+```
+Import the second dataset
+```{r}
+pups_df = 
+  read_csv("data/data/FAS_pups.csv", skip = 3)
+
+pups_df = janitor::clean_names(pups_df) #"janitor" is a package, "clean_names()" is a function in the package. "::" means only open this function rather than all the things in the package.  
+```
+## Look at the data
+```{r}
+litters_df
+pups_df
+```
+Head or tail
+```{r}
+head(litters_df, 20)
+tail(pups_df, 5)
+```
+
+skimming? 
+```{r}
+skimr::skim(pups_df)
 ```
 
