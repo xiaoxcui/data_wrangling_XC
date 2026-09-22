@@ -604,3 +604,5 @@ pups_df_base
     ## 316           #82/4                     2       3      13        7       9
 
 Won’t show: lazy about variable names; super slow for big dataset.
+
+Need to re-knit before commit every time!!!

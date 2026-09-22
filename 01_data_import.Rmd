@@ -110,3 +110,5 @@ pups_df_base
 ```
 
 Won't show: lazy about variable names; super slow for big dataset. 
+
+Need to re-knit before commit every time!!!
