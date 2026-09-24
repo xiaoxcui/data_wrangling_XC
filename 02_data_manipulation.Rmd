@@ -1,5 +1,5 @@
 ---
-title: "Data Import"
+title: "Data Manipulation"
 output: github_document
 ---
 
@@ -10,8 +10,6 @@ This file is for doing data import.
 
 ```{r}
 library(tidyverse)
-library(readxl)
-library(haven)
 ```
 Import our first dataset. 
 "na = c("", "NA", ".")" changes the missing data which is originally character viarable to numbers. 
@@ -23,92 +21,87 @@ litters_df =
   ) #always use relative path
 
 litters_df = janitor::clean_names(litters_df)
-```
-Import the second dataset
-```{r}
+
 pups_df = 
-  read_csv(
-    "data/data/FAS_pups.csv", 
-    skip = 3, 
-    na = c("", "NA", ".")
-  )
+  read.csv("data/data/FAS_pups.csv", 
+           skip = 3, 
+           na = c("", "NA", "."))
 
-pups_df = janitor::clean_names(pups_df) #"janitor" is a package, "clean_names()" is a function in the package. "::" means only open this function rather than all the things in the package.  
-```
-## Look at the data
-```{r}
-litters_df
-pups_df
-```
-Head or tail
-```{r}
-head(litters_df, 20)
-tail(pups_df, 5)
+pups_df = janitor::clean_names(pups_df)
 ```
 
-skimming? 
-```{r}
-skimr::skim(pups_df)
-```
-
-
-## 0h excell ...
-
-Jenny Bryan made `readxl` to solve our problems. 
+## `select` some variables
 
 ```{r}
-mlb_df = 
-  read_excel("data/data/mlb11.xlsx")
+select(litters_df, group, litter_number)
+
+select(litters_df, group:gd_of_birth)
+
+select(litters_df, group)
+
+select(litters_df, starts_with("gd"))
+
+select(litters_df, starts_with("gd"), group)
+
+select(litters_df, GROUP = group, everything())
+
+select(litters_df, starts_with("gd"))
 ```
 
-Look at the data!
+a couple of alternatives
 
 ```{r}
-mlb_df
+rename(litters_df, GROUP = group)
+
+relocate(litters_df, litter_number, gd0_weight)
 ```
 
-Look at some LotR data. 
-
-Import FOTR words. 
+In the pups data, select litter number, sex, and PD ears. 
 
 ```{r}
-fotr_df = 
-  read_excel(
-    "data/data/LotR_Words.xlsx", 
-    range = "B3:D6"
-  )
-fotr_df
-```
-```{r}
-tt_df =
-  read_excel(
-    "data/data/LotR_Words.xlsx", 
-    range = "F3:H6"
-  )
-tt_df
+select(pups_df, litter_number, sex, pd_ears)
 ```
 
-## Import SAS
 
-Read in the PULSE dataset
+## `filter` some rows
 
 ```{r}
-pulse_df = 
-  read_sas("data/data/public_pulse_data.sas7bdat")
+filter(litters_df, gd_of_birth == 20)
 
-pulse_df = janitor::clean_names(pulse_df)
+filter(litters_df, pups_born_alive <= 5)
+
+filter(litters_df, pups_born_alive != 6)
+
+filter(litters_df, group %in% c("Con7", "Con8"))
+
+filter(litters_df, group %in% c("Con7", "Con8"), pups_born_alive < 7)
+
+filter(litters_df, pups_born_alive < 4 | pups_born_alive > 8)
+
+drop_na(litters_df, gd0_weight)
 ```
 
-## 
+In the pups dataset, keep only rows where PD walk is less than 11 and sex is 2. 
 
-Import pups with `read.csv()`
 ```{r}
-pups_df_base = 
-  read.csv("data/data/FAS_pups.csv")
-
-pups_df_base
+filter(pups_df, pd_walk < 11, sex == 2)
 ```
 
-Won't show: lazy about variable names; super slow for big dataset. 
 
-Need to re-knit before commit every time!!!
+## `mutate` to change some columns
+
+let's add and choose some columns
+
+```{r}
+mutate(litters_df, 
+       wt_gain = gd18_weight - gd0_weight, 
+       wt_gain_squared = wt_gain ^ 2, 
+       group = str_to_lower(group))
+```
+
+In the pups dataset, create a variable that substracts 7 from PD walk. 
+
+```{r}
+mutate(pups_df, pd_walk_minus_7 = pd_walk - 7)
+```
+
