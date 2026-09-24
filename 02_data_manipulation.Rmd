@@ -1,0 +1,114 @@
+---
+title: "Data Import"
+output: github_document
+---
+
+I'm an R Markdown document! 
+
+## Import datasets
+This file is for doing data import.
+
+```{r}
+library(tidyverse)
+library(readxl)
+library(haven)
+```
+Import our first dataset. 
+"na = c("", "NA", ".")" changes the missing data which is originally character viarable to numbers. 
+```{r}
+litters_df = 
+  read_csv(
+    file = "data/data/FAS_litters.csv",
+    na = c("", "NA", ".")
+  ) #always use relative path
+
+litters_df = janitor::clean_names(litters_df)
+```
+Import the second dataset
+```{r}
+pups_df = 
+  read_csv(
+    "data/data/FAS_pups.csv", 
+    skip = 3, 
+    na = c("", "NA", ".")
+  )
+
+pups_df = janitor::clean_names(pups_df) #"janitor" is a package, "clean_names()" is a function in the package. "::" means only open this function rather than all the things in the package.  
+```
+## Look at the data
+```{r}
+litters_df
+pups_df
+```
+Head or tail
+```{r}
+head(litters_df, 20)
+tail(pups_df, 5)
+```
+
+skimming? 
+```{r}
+skimr::skim(pups_df)
+```
+
+
+## 0h excell ...
+
+Jenny Bryan made `readxl` to solve our problems. 
+
+```{r}
+mlb_df = 
+  read_excel("data/data/mlb11.xlsx")
+```
+
+Look at the data!
+
+```{r}
+mlb_df
+```
+
+Look at some LotR data. 
+
+Import FOTR words. 
+
+```{r}
+fotr_df = 
+  read_excel(
+    "data/data/LotR_Words.xlsx", 
+    range = "B3:D6"
+  )
+fotr_df
+```
+```{r}
+tt_df =
+  read_excel(
+    "data/data/LotR_Words.xlsx", 
+    range = "F3:H6"
+  )
+tt_df
+```
+
+## Import SAS
+
+Read in the PULSE dataset
+
+```{r}
+pulse_df = 
+  read_sas("data/data/public_pulse_data.sas7bdat")
+
+pulse_df = janitor::clean_names(pulse_df)
+```
+
+## 
+
+Import pups with `read.csv()`
+```{r}
+pups_df_base = 
+  read.csv("data/data/FAS_pups.csv")
+
+pups_df_base
+```
+
+Won't show: lazy about variable names; super slow for big dataset. 
+
+Need to re-knit before commit every time!!!
